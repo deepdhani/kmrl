@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans:wght@400;500;700;900&family=Public+Sans:wght@400;500;700;900"
+    />
+    <title>Kochi Metro Rail Limited</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style>
+      .slideshow {
+        transition: background-image 1s ease-in-out;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+      @keyframes oscillate {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(30px); }
+        100% { transform: translateX(0); }
+      }
+      .oscillating-text {
+        display: inline-block;
+        animation: oscillate 3s ease-in-out infinite alternate;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-slate-50 overflow-x-hidden"
+         style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        <!-- Header -->
+        <header
+          class="absolute top-0 left-0 right-0 flex items-center justify-between border-b border-b-[#e7edf3] px-10 py-3 z-10 bg-black/30"
+        >
+          <a href="index.html" class="flex items-center gap-4 text-white cursor-pointer">
+            <h2 class="text-lg font-bold">Kochi Metro Rail Limited</h2>
+          </a>
+
+          <div class="flex flex-1 justify-end gap-8 text-white">
+            <div class="flex items-center gap-9">
+              <a class="text-sm font-medium hover:text-[#1773cf]" href="fitnesscertificate.html">Fitness Certificates</a>
+              <a class="text-sm font-medium hover:text-[#1773cf]" href="jobcard.html">Job Card Status</a>
+              <a class="text-sm font-medium hover:text-[#1773cf]" href="brandingpriorities.html">Branding Priorities</a>
+              <a class="text-sm font-medium hover:text-[#1773cf]" href="stablinggeometry.html">Stabling Geometry</a>
+            </div>
+            <div class="flex items-center gap-4">
+              <button onclick="window.location.href='aboutus.html'"
+                class="rounded-lg h-10 px-4 bg-gray-300 text-black font-bold hover:bg-[#1773cf] hover:text-white transition">
+                About Us
+              </button>
+              <button onclick="window.location.href='login.html'"
+                class="rounded-lg h-10 px-4 bg-[#1773cf] text-white font-bold hover:bg-blue-800 transition">
+                Login/Sign In
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- ✅ Full Screen Slideshow -->
+        <div
+          id="slideshow"
+          class="slideshow relative flex h-screen w-full flex-col gap-6 items-center justify-center p-4"
+          style='background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url("static/54.jpg");'
+        >
+          <div class="flex flex-col gap-2 text-center z-10">
+            <h1 class="oscillating-text text-white text-4xl font-black md:text-6xl">
+              Welcome to Kochi Metro Rail Limited
+            </h1>
+            <h2 class="text-white text-lg md:text-xl">
+              Your trusted partner for efficient and sustainable urban transportation in Kochi.
+            </h2>
+          </div>
+          <button
+            onclick="window.location.href='aboutus.html'"
+            class="mt-6 rounded-lg h-12 px-6 bg-[#1773cf] text-white font-bold hover:bg-blue-800 transition z-10"
+          >
+            Explore Kochi Metro
+          </button>
+          <div class="absolute inset-0 bg-black/30"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ JS Slideshow -->
+    <script>
+      const images = ["/static/54.jpg", "/static/00.jpg", "/static/12.jpg"];
+      let index = 0;
+      const slideshow = document.getElementById("slideshow");
+
+      setInterval(() => {
+        index = (index + 1) % images.length;
+        slideshow.style.backgroundImage =
+          `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url("${images[index]}")`;
+      }, 4000);
+    </script>
+  </body>
+</html>
