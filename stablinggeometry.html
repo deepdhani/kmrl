@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KMRL - Stabling Geometry Optimizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navbar -->
+  <nav class="bg-blue-700 text-white p-4 flex justify-between items-center shadow">
+    <h1 class="text-xl font-bold cursor-pointer" onclick="location.href='index.html'">🚆 Kochi Metro Rail Limited</h1>
+    <div class="flex space-x-6">
+      <a href="index.html" class="hover:text-gray-200">Home</a>
+      <a href="aboutus.html" class="hover:text-gray-200">About Us</a>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container mx-auto px-6 py-8">
+    <h2 class="text-3xl font-bold mb-6 text-center text-blue-700">Stabling Geometry Optimizer</h2>
+
+    <!-- Train Input Section -->
+    <div class="bg-white p-6 rounded-xl shadow mb-6">
+      <h3 class="text-lg font-bold mb-4">Add Trains</h3>
+      <div class="flex space-x-4 mb-4">
+        <input id="trainId" type="text" placeholder="Train ID (T1)" class="border rounded-lg p-2 flex-1"/>
+        <input id="trainPriority" type="number" placeholder="Priority" class="border rounded-lg p-2 w-32"/>
+        <input id="trainLength" type="number" placeholder="Length" class="border rounded-lg p-2 w-32"/>
+        <button onclick="addTrain()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">Add Train</button>
+      </div>
+      <ul id="trainList" class="list-disc pl-6 text-gray-700"></ul>
+    </div>
+
+    <!-- Bay Input Section -->
+    <div class="bg-white p-6 rounded-xl shadow mb-6">
+      <h3 class="text-lg font-bold mb-4">Add Bays</h3>
+      <div class="flex space-x-4 mb-4">
+        <input id="bayId" type="text" placeholder="Bay ID (B1)" class="border rounded-lg p-2 flex-1"/>
+        <input id="bayCapacity" type="number" placeholder="Capacity" class="border rounded-lg p-2 w-32"/>
+        <button onclick="addBay()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-500">Add Bay</button>
+      </div>
+      <ul id="bayList" class="list-disc pl-6 text-gray-700"></ul>
+    </div>
+
+    <!-- Optimize Button -->
+    <div class="flex justify-center mb-6">
+      <button onclick="optimize()" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-purple-500">Optimize Stabling</button>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="bg-white p-6 rounded-xl shadow hidden">
+      <h3 class="text-lg font-bold mb-4">Optimal Assignment</h3>
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="bg-blue-100 text-gray-700">
+            <th class="p-3">Train ID</th>
+            <th class="p-3">Bay ID</th>
+            <th class="p-3">Priority</th>
+          </tr>
+        </thead>
+        <tbody id="resultTable" class="text-gray-700"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let trains = [];
+    let bays = [];
+
+    function addTrain() {
+      const id = document.getElementById("trainId").value;
+      const priority = parseInt(document.getElementById("trainPriority").value);
+      const length = parseInt(document.getElementById("trainLength").value);
+      if (!id || isNaN(priority) || isNaN(length)) return alert("Please fill all train fields");
+
+      trains.push({id, priority, length});
+      document.getElementById("trainList").innerHTML += `<li>🚆 ${id} | Priority: ${priority}, Length: ${length}</li>`;
+
+      document.getElementById("trainId").value = "";
+      document.getElementById("trainPriority").value = "";
+      document.getElementById("trainLength").value = "";
+    }
+
+    function addBay() {
+      const id = document.getElementById("bayId").value;
+      const capacity = parseInt(document.getElementById("bayCapacity").value);
+      if (!id || isNaN(capacity)) return alert("Please fill all bay fields");
+
+      bays.push({id, capacity});
+      document.getElementById("bayList").innerHTML += `<li>🅱️ ${id} | Capacity: ${capacity}</li>`;
+
+      document.getElementById("bayId").value = "";
+      document.getElementById("bayCapacity").value = "";
+    }
+
+    async function optimize() {
+      if (trains.length === 0 || bays.length === 0) return alert("Please add trains and bays first");
+
+      try {
+        const res = await fetch("/api/stabling_optimize", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({trains, bays})
+        });
+        const data = await res.json();
+
+        if (!data || data.length === 0) return alert("No feasible assignment found");
+
+        let rows = "";
+        data.forEach(s => {
+          rows += `<tr class="hover:bg-gray-50">
+                    <td class="p-3">${s.train_id}</td>
+                    <td class="p-3">${s.bay_id}</td>
+                    <td class="p-3">${s.priority}</td>
+                  </tr>`;
+        });
+        document.getElementById("resultTable").innerHTML = rows;
+        document.getElementById("results").classList.remove("hidden");
+      } catch (err) {
+        console.error(err);
+        alert("Error running optimizer");
+      }
+    }
+  </script>
+</body>
+</html>

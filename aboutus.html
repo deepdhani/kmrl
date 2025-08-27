@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div class="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden" style='font-family: "Public Sans", "Noto Sans", sans-serif;'>
+      <div class="layout-container flex h-full grow flex-col">
+        
+        <!-- Header -->
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#e7edf3] px-10 py-3">
+          <div class="flex items-center gap-4 text-[#0e141b] cursor-pointer" onclick="location.href='index.html'">
+            <div class="size-4">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+              </svg>
+            </div>
+            <h2 class="text-[#0e141b] text-lg font-bold leading-tight tracking-[-0.015em]">Kochi Metro</h2>
+          </div>
+          <div class="flex flex-1 justify-end gap-8">
+            <div class="flex items-center gap-9">
+              <!-- FIXED: Home now redirects back to index.html -->
+              <a class="text-[#0e141b] text-sm font-medium leading-normal" href="index.html">Home</a>
+            </div>
+            <button
+              class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#e7edf3] text-[#0e141b] text-sm font-bold leading-normal tracking-[0.015em]">
+              <span class="truncate">English</span>
+            </button>
+          </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex flex-wrap justify-between gap-3 p-4">
+              <p class="text-[#0e141b] tracking-light text-[32px] font-bold leading-tight min-w-72">About Us</p>
+            </div>
+            
+            <h2 class="text-[#0e141b] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Our History</h2>
+            <p class="text-[#0e141b] text-base font-normal leading-normal pb-3 pt-1 px-4">
+              Kochi Metro Rail Limited (KMRL) was established in 2012 to implement and operate the Kochi Metro project. The project was envisioned to provide a modern, efficient,
+              and sustainable public transportation system for the city of Kochi, addressing its growing traffic congestion and enhancing urban mobility. The first phase of the
+              metro line, spanning from Aluva to Palarivattom, was inaugurated in 2017, marking a significant milestone in the city's infrastructure development.
+            </p>
+            
+            <h2 class="text-[#0e141b] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Mission and Vision</h2>
+            <p class="text-[#0e141b] text-base font-normal leading-normal pb-3 pt-1 px-4">
+              Our mission is to deliver a world-class metro system that is safe, reliable, and environmentally friendly, contributing to the socio-economic development of Kochi.
+              Our vision is to be a leader in urban transportation, continuously innovating and expanding our services to meet the evolving needs of the community.
+            </p>
+            
+            <h2 class="text-[#0e141b] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Key Achievements</h2>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Phase 1 Completion</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Operational since 2017</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Multi-Modal Connectivity</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Integration with other transport modes</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Eco-Friendly Initiatives</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Focus on green energy and sustainability</p>
+              </div>
+            </div>
+            
+            <h2 class="text-[#0e141b] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Leadership Team</h2>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Dr. Arjun Verma</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Managing Director</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Ms. Priya Sharma</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Director (Operations)</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+              <div class="flex flex-col justify-center">
+                <p class="text-[#0e141b] text-base font-medium leading-normal line-clamp-1">Mr. Rohan Kapoor</p>
+                <p class="text-[#4e7397] text-sm font-normal leading-normal line-clamp-2">Director (Finance)</p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

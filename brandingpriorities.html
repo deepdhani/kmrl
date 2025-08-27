@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KMRL — Branding Priorities</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;800&display=swap">
+  <style>
+    body { font-family: "Public Sans", sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 1rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+    }
+    .btn {
+      @apply inline-flex items-center gap-2 rounded-lg px-4 h-10 font-semibold transition;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      @apply text-white hover:opacity-90;
+    }
+    .btn-ghost { @apply bg-white/70 text-slate-800 hover:bg-white; }
+    .metro-header {
+      background: linear-gradient(90deg, #0ea5e9, #14b8a6);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-sky-50 to-emerald-50 min-h-screen">
+
+  <!-- Hero Section -->
+  <header class="metro-header text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="location.href='index.html'">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Metro_logo.svg/512px-Metro_logo.svg.png"
+             alt="Metro Logo" class="w-10 h-10 rounded-full bg-white p-1">
+        <h1 class="text-2xl md:text-3xl font-extrabold">Kochi Metro Rail Limited</h1>
+      </div>
+      <nav class="flex gap-6 mt-4 md:mt-0">
+        <a href="index.html" class="hover:underline">Home</a>
+        <a href="aboutus.html" class="hover:underline">About Us</a>
+        <a href="login.html" class="bg-white text-blue-700 px-3 py-1.5 rounded-lg font-semibold hover:bg-gray-200">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6 py-10 space-y-10">
+
+    <!-- Title & Actions -->
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <h2 class="text-3xl font-extrabold text-slate-800">🎨 Branding Priorities</h2>
+        <p class="text-slate-600">Visualize & optimize advertiser exposure across trainsets.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button id="btnRank" class="btn btn-primary">🚀 Run Ranking</button>
+        <button id="btnReset" class="btn btn-ghost">🔄 Reset Demo</button>
+        <button id="btnSave" class="btn btn-ghost">💾 Save</button>
+        <button id="btnExport" class="btn btn-ghost">📊 Export CSV</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-card text-center">
+        <p class="text-sm text-slate-500">Active Contracts</p>
+        <p id="kpi_contracts" class="text-4xl font-extrabold text-sky-600">—</p>
+      </div>
+      <div class="glass-card text-center">
+        <p class="text-sm text-slate-500">Outstanding km</p>
+        <p id="kpi_remaining" class="text-4xl font-extrabold text-rose-500">—</p>
+      </div>
+      <div class="glass-card text-center">
+        <p class="text-sm text-slate-500">Avg. Urgency</p>
+        <p id="kpi_urgency" class="text-4xl font-extrabold text-emerald-600">—</p>
+      </div>
+    </section>
+
+    <!-- Editor Panels -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="glass-card">
+        <h3 class="text-lg font-bold mb-3">📑 Advertiser Contracts</h3>
+        <table class="w-full text-sm">
+          <thead><tr class="text-slate-500"><th>Advertiser</th><th>Target</th><th>Current</th><th>Remaining</th><th></th></tr></thead>
+          <tbody id="tblContracts"></tbody>
+        </table>
+        <button id="btnAddAdvertiser" class="btn btn-ghost mt-4">➕ Add Advertiser</button>
+      </div>
+
+      <div class="glass-card">
+        <h3 class="text-lg font-bold mb-3">🚆 Trainsets</h3>
+        <table class="w-full text-sm">
+          <thead><tr class="text-slate-500"><th>ID</th><th>Advertiser</th><th>Score</th><th></th></tr></thead>
+          <tbody id="tblTrains"></tbody>
+        </table>
+        <button id="btnAddTrain" class="btn btn-ghost mt-4">➕ Add Trainset</button>
+      </div>
+    </section>
+
+    <!-- Ranking & What-if -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="glass-card lg:col-span-2">
+        <h3 class="text-lg font-bold mb-3">🏆 Ranked Induction List</h3>
+        <table class="w-full text-sm">
+          <thead><tr class="text-slate-500"><th>#</th><th>Train</th><th>Advertiser</th><th>Score</th></tr></thead>
+          <tbody id="tblRanked"></tbody>
+        </table>
+      </div>
+
+      <div class="glass-card">
+        <h3 class="text-lg font-bold mb-3">🔮 What-if Simulator</h3>
+        <label class="text-sm">Advertiser</label>
+        <select id="simAdvertiser" class="w-full border rounded-lg p-2 mb-3"></select>
+        <label class="text-sm">Add km</label>
+        <input id="simAddKm" type="range" min="0" max="20000" step="500" class="w-full mb-2">
+        <p class="text-xs text-slate-500 mb-3">+<span id="simAddKmVal">0</span> km added</p>
+        <div class="bg-slate-100 p-3 rounded-lg">
+          <p>Target: <span id="simTarget">—</span></p>
+          <p>Current: <span id="simCurrent">—</span></p>
+          <p>Remaining: <span id="simRemaining">—</span></p>
+          <p class="font-bold">Score: <span id="simScore">—</span></p>
+        </div>
+        <canvas id="priorityChart" height="120" class="mt-4"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <!-- JavaScript -->
+  <script>
+    // Sample data
+    let advertisers = [
+      { name: "Pepsi", target: 20000, current: 12000 },
+      { name: "Airtel", target: 15000, current: 6000 },
+      { name: "Toyota", target: 18000, current: 17000 }
+    ];
+
+    let trains = [
+      { id: "Train-01", advertiser: "Pepsi", score: 0 },
+      { id: "Train-02", advertiser: "Airtel", score: 0 },
+      { id: "Train-03", advertiser: "Toyota", score: 0 }
+    ];
+
+    // Populate contracts
+    function renderContracts() {
+      const tbody = document.getElementById("tblContracts");
+      tbody.innerHTML = "";
+      advertisers.forEach((a, i) => {
+        const remaining = a.target - a.current;
+        tbody.innerHTML += `
+          <tr class="border-b">
+            <td>${a.name}</td>
+            <td>${a.target}</td>
+            <td>${a.current}</td>
+            <td class="text-rose-600">${remaining}</td>
+            <td><button onclick="deleteAdvertiser(${i})" class="text-red-500">🗑</button></td>
+          </tr>`;
+      });
+      updateKPIs();
+      updateSimulatorOptions();
+    }
+
+    function deleteAdvertiser(i) { advertisers.splice(i, 1); renderContracts(); }
+
+    // Populate trains
+    function renderTrains() {
+      const tbody = document.getElementById("tblTrains");
+      tbody.innerHTML = "";
+      trains.forEach((t, i) => {
+        tbody.innerHTML += `
+          <tr class="border-b">
+            <td>${t.id}</td>
+            <td>${t.advertiser}</td>
+            <td>${t.score.toFixed(2)}</td>
+            <td><button onclick="deleteTrain(${i})" class="text-red-500">🗑</button></td>
+          </tr>`;
+      });
+    }
+
+    function deleteTrain(i) { trains.splice(i, 1); renderTrains(); }
+
+    // Ranking logic
+    function runRanking() {
+      trains.forEach(t => {
+        const adv = advertisers.find(a => a.name === t.advertiser);
+        const remaining = adv ? adv.target - adv.current : 0;
+        t.score = Math.max(0, remaining / adv.target);
+      });
+      trains.sort((a, b) => b.score - a.score);
+      renderRanking();
+      renderTrains();
+    }
+
+    function renderRanking() {
+      const tbody = document.getElementById("tblRanked");
+      tbody.innerHTML = "";
+      trains.forEach((t, i) => {
+        tbody.innerHTML += `
+          <tr class="border-b">
+            <td>${i+1}</td>
+            <td>${t.id}</td>
+            <td>${t.advertiser}</td>
+            <td class="font-bold">${t.score.toFixed(2)}</td>
+          </tr>`;
+      });
+    }
+
+    // KPIs
+    function updateKPIs() {
+      document.getElementById("kpi_contracts").textContent = advertisers.length;
+      document.getElementById("kpi_remaining").textContent = advertisers.reduce((sum,a)=>sum+(a.target-a.current),0);
+      document.getElementById("kpi_urgency").textContent = (
+        advertisers.reduce((sum,a)=>sum+(a.target-a.current)/a.target,0)/advertisers.length
+      ).toFixed(2);
+    }
+
+    // Simulator
+    let simChart;
+    function updateSimulatorOptions() {
+      const sel = document.getElementById("simAdvertiser");
+      sel.innerHTML = "";
+      advertisers.forEach(a => sel.innerHTML += `<option value="${a.name}">${a.name}</option>`);
+      updateSimulator();
+    }
+
+    function updateSimulator() {
+      const adv = advertisers.find(a=>a.name===document.getElementById("simAdvertiser").value);
+      const addKm = parseInt(document.getElementById("simAddKm").value);
+      document.getElementById("simAddKmVal").textContent = addKm;
+      if (!adv) return;
+      document.getElementById("simTarget").textContent = adv.target;
+      document.getElementById("simCurrent").textContent = adv.current+addKm;
+      document.getElementById("simRemaining").textContent = adv.target-(adv.current+addKm);
+      const score = Math.max(0,(adv.target-(adv.current+addKm))/adv.target);
+      document.getElementById("simScore").textContent = score.toFixed(2);
+
+      // chart
+      const ctx = document.getElementById("priorityChart");
+      if (simChart) simChart.destroy();
+      simChart = new Chart(ctx,{type:"doughnut",data:{labels:["Achieved","Remaining"],datasets:[{data:[adv.current+addKm,adv.target-(adv.current+addKm)],backgroundColor:["#22c55e","#ef4444"]}]},options:{plugins:{legend:{position:"bottom"}}}});
+    }
+
+    // Add dummy data
+    document.getElementById("btnAddAdvertiser").onclick = ()=>{advertisers.push({name:"NewAdv",target:10000,current:0}); renderContracts();};
+    document.getElementById("btnAddTrain").onclick = ()=>{trains.push({id:"Train-"+(trains.length+1),advertiser:advertisers[0]?.name||"N/A",score:0}); renderTrains();};
+
+    document.getElementById("btnRank").onclick = runRanking;
+    document.getElementById("btnReset").onclick = ()=>{location.reload();};
+    document.getElementById("btnExport").onclick = exportCSV;
+
+    function exportCSV() {
+      let csv = "ID,Advertiser,Score\n";
+      trains.forEach(t=>{csv+=`${t.id},${t.advertiser},${t.score}\n`;});
+      const blob = new Blob([csv],{type:"text/csv"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href=url;a.download="branding_priorities.csv";a.click();
+    }
+
+    document.getElementById("simAdvertiser").onchange = updateSimulator;
+    document.getElementById("simAddKm").oninput = updateSimulator;
+
+    // Init
+    renderContracts();
+    renderTrains();
+    runRanking();
+  </script>
+</body>
+</html>
