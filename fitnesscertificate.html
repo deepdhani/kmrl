@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Certificates Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navbar -->
+  <nav class="bg-blue-700 text-white p-4 flex justify-between items-center shadow">
+    <h1 class="text-xl font-bold cursor-pointer" onclick="location.href='index.html'">
+      Kochi Metro Rail Limited
+    </h1>
+    <div class="flex space-x-6">
+      <a href="index.html" class="hover:text-gray-200">Home</a>
+      <!-- ✅ Fixed About Us redirect -->
+      <a href="aboutus.html" class="hover:text-gray-200">About Us</a>
+      <a href="login.html" class="bg-white text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200">Login</a>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="container mx-auto px-6 py-8">
+    <h2 class="text-2xl font-bold mb-6">Fitness Certificates Overview</h2>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-gray-600 text-sm">Certificates Expiring Soon</h3>
+        <p id="expiringCount" class="text-3xl font-bold text-red-600">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-gray-600 text-sm">Predicted Failures</h3>
+        <p id="predictedFailures" class="text-3xl font-bold text-yellow-500">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h3 class="text-gray-600 text-sm">Total Active Certificates</h3>
+        <p id="totalCertificates" class="text-3xl font-bold text-green-600">0</p>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="bg-white p-6 rounded-xl shadow mb-6">
+      <h3 class="text-lg font-bold mb-4">Expiry Trends</h3>
+      <canvas id="expiryChart" height="100"></canvas>
+    </div>
+
+    <!-- Table Section -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-bold mb-4">Upcoming Expiries</h3>
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="bg-blue-100 text-gray-700">
+            <th class="p-3">Train ID</th>
+            <th class="p-3">Department</th>
+            <th class="p-3">Expiry Date</th>
+            <th class="p-3">Days Left</th>
+          </tr>
+        </thead>
+        <tbody id="expiryTable" class="text-gray-600">
+          <!-- Data will be injected here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Fetch data from backend APIs
+    async function loadDashboard() {
+      try {
+        // Example API endpoints (adjust for Flask/Django)
+        const expiringRes = await fetch("/api/expiring?days=7");
+        const expiring = await expiringRes.json();
+
+        const totalRes = await fetch("/api/total");
+        const total = await totalRes.json();
+
+        const failureRes = await fetch("/api/predicted_failures");
+        const failures = await failureRes.json();
+
+        // Update counts
+        document.getElementById("expiringCount").textContent = expiring.length;
+        document.getElementById("predictedFailures").textContent = failures.count;
+        document.getElementById("totalCertificates").textContent = total.count;
+
+        // Table
+        let tableBody = "";
+        expiring.forEach(cert => {
+          tableBody += `
+            <tr class="hover:bg-gray-50">
+              <td class="p-3">${cert.train_id}</td>
+              <td class="p-3">${cert.department}</td>
+              <td class="p-3">${cert.expiry_date}</td>
+              <td class="p-3 text-red-600 font-bold">${cert.days_to_expiry}</td>
+            </tr>`;
+        });
+        document.getElementById("expiryTable").innerHTML = tableBody;
+
+        // Chart
+        const ctx = document.getElementById("expiryChart");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: expiring.map(e => e.train_id),
+            datasets: [{
+              label: "Days to Expiry",
+              data: expiring.map(e => e.days_to_expiry),
+              backgroundColor: "rgba(59,130,246,0.7)"
+            }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+      }
+    }
+    loadDashboard();
+  </script>
+</body>
+</html>

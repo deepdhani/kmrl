@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kochi Metro Rail - Jobcard Status</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* ✅ Custom bounce animation */
+    @keyframes bounce-slow {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+    .animate-bounce-slow {
+      animation: bounce-slow 1s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <!-- Navbar -->
+  <nav class="bg-blue-700 text-white p-4 flex justify-between items-center shadow">
+    <h1 class="text-xl font-bold cursor-pointer" onclick="location.href='index.html'">🚆 Kochi Metro Rail Limited</h1>
+    <div class="flex space-x-6">
+      <a href="index.html" class="hover:text-gray-200">Home</a>
+      <!-- ✅ Fixed About Us redirect -->
+      <a href="aboutus.html" class="hover:text-gray-200">About Us</a>
+      <a href="login.html" class="bg-white text-blue-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-200">Login</a>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard -->
+  <div class="container mx-auto px-6 py-8">
+    <h2 class="text-2xl font-bold mb-6">Jobcard Status Dashboard</h2>
+
+    <!-- Search Section -->
+    <div class="bg-white p-6 rounded-xl shadow mb-6">
+      <h3 class="text-lg font-bold mb-4">Search Jobcard Status</h3>
+      <div class="flex space-x-4">
+        <!-- ✅ Bouncing input field -->
+        <input id="trainInput" type="number" placeholder="Enter Train ID"
+          class="flex-1 border rounded-lg p-2 animate-bounce-slow"/>
+        <button onclick="fetchJobStatus()"
+          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500">
+          Check Status
+        </button>
+      </div>
+      <div id="jobStatusResult" class="mt-4 text-gray-700"></div>
+    </div>
+
+    <!-- Failure Risk Prediction -->
+    <div class="bg-white p-6 rounded-xl shadow mb-6">
+      <h3 class="text-lg font-bold mb-4">Predict Failure Risk</h3>
+      <button onclick="predictFailure()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-500">Run Prediction</button>
+      <div id="predictionResult" class="mt-4 text-gray-700"></div>
+    </div>
+
+    <!-- Chart for Jobcards -->
+    <div class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-lg font-bold mb-4">Job Status Distribution</h3>
+      <canvas id="jobChart" height="100"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Fetch jobcard status
+    async function fetchJobStatus() {
+      const trainId = document.getElementById("trainInput").value;
+      if (!trainId) return alert("Please enter a Train ID");
+
+      try {
+        const res = await fetch(`/api/jobstatus?train_id=${trainId}`);
+        const data = await res.json();
+
+        document.getElementById("jobStatusResult").innerHTML = `
+          <p><strong>Train ID:</strong> ${data.train_id}</p>
+          <p><strong>Total Jobs:</strong> ${data.total_jobs}</p>
+          <p><strong>Open Jobs:</strong> ${data.open_jobs}</p>
+          <p><strong>Closed Jobs:</strong> ${data.closed_jobs}</p>
+          <p><strong>Critical Alert:</strong> <span class="${data.critical_alert === 'YES' ? 'text-red-600 font-bold' : 'text-green-600'}">${data.critical_alert}</span></p>
+        `;
+
+        // Update Chart
+        updateChart(data.open_jobs, data.closed_jobs);
+
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching jobcard status");
+      }
+    }
+
+    // Predict failure risk
+    async function predictFailure() {
+      try {
+        const res = await fetch(`/api/predict_failure`);
+        const data = await res.json();
+        document.getElementById("predictionResult").innerHTML =
+          `<p><strong>Predicted Failure Risk:</strong> ${data.prediction}</p>`;
+      } catch (err) {
+        console.error(err);
+        alert("Error predicting failure risk");
+      }
+    }
+
+    // Job Status Chart
+    let chart;
+    function updateChart(openJobs, closedJobs) {
+      const ctx = document.getElementById("jobChart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: ["Open Jobs", "Closed Jobs"],
+          datasets: [{
+            data: [openJobs, closedJobs],
+            backgroundColor: ["#ef4444", "#22c55e"]
+          }]
+        }
+      });
+    }
+  </script>
+</body>
+</html>
