@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kochi Metro Rail - Login & Signup</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+  <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+    href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;700;900&family=Noto+Sans:wght@400;500;700;900"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <style>
+    @keyframes bounceInput {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.05); }
+      50% { transform: scale(0.95); }
+      70% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    input:focus {
+      animation: bounceInput 0.4s ease;
+      border-color: #3d99f5;
+      box-shadow: 0 0 8px rgba(61, 153, 245, 0.5);
+      outline: none;
+    }
+  </style>
+
+  <script>
+    // ✅ Toggle tabs
+    function showTab(tab) {
+      document.getElementById("loginForm").style.display = (tab === "login") ? "block" : "none";
+      document.getElementById("signupForm").style.display = (tab === "signup") ? "block" : "none";
+
+      const loginTab = document.getElementById("loginTab");
+      const signupTab = document.getElementById("signupTab");
+
+      if (tab === "login") {
+        loginTab.classList.add("border-b-[3px]", "border-b-[#3d99f5]", "text-[#0d141c]");
+        loginTab.classList.remove("border-b-transparent", "text-[#49739c]");
+        signupTab.classList.add("border-b-transparent", "text-[#49739c]");
+        signupTab.classList.remove("border-b-[3px]", "border-b-[#3d99f5]", "text-[#0d141c]");
+      } else {
+        signupTab.classList.add("border-b-[3px]", "border-b-[#3d99f5]", "text-[#0d141c]");
+        signupTab.classList.remove("border-b-transparent", "text-[#49739c]");
+        loginTab.classList.add("border-b-transparent", "text-[#49739c]");
+        loginTab.classList.remove("border-b-[3px]", "border-b-[#3d99f5]", "text-[#0d141c]");
+      }
+    }
+
+    // ✅ Login API
+    async function loginUser() {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+      const errorBox = document.getElementById("loginError");
+
+      try {
+        const response = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          window.location.href = "/index.html";
+        } else {
+          errorBox.textContent = data.error;
+          errorBox.style.display = "block";
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        errorBox.textContent = "Server error. Try again later.";
+        errorBox.style.display = "block";
+      }
+    }
+
+    // ✅ Signup API
+    async function signupUser() {
+      const first_name = document.getElementById("signupFirstName").value;
+      const last_name = document.getElementById("signupLastName").value;
+      const email = document.getElementById("signupEmail").value;
+      const username = document.getElementById("signupUsername").value;
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("signupConfirmPassword").value;
+      const errorBox = document.getElementById("signupError");
+
+      if (password !== confirmPassword) {
+        errorBox.textContent = "Passwords do not match!";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      try {
+        const response = await fetch("/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ first_name, last_name, email, username, password })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          errorBox.style.color = "green";
+          errorBox.textContent = "Signup successful! Redirecting...";
+          errorBox.style.display = "block";
+          setTimeout(() => {
+            showTab("login");
+          }, 1500);
+        } else {
+          errorBox.textContent = data.error || "Signup failed!";
+          errorBox.style.display = "block";
+        }
+      } catch (err) {
+        console.error("Error:", err);
+        errorBox.textContent = "Server error. Try again later.";
+        errorBox.style.display = "block";
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="relative flex size-full min-h-screen flex-col bg-slate-50 overflow-x-hidden"
+    style='font-family: Inter, "Noto Sans", sans-serif;'>
+    <div class="layout-container flex h-full grow flex-col">
+
+      <!-- Header -->
+      <header class="flex items-center justify-between border-b border-b-[#e7edf4] px-10 py-3">
+        <div class="flex items-center gap-4 text-[#0d141c] cursor-pointer" onclick="window.location.href='index.html'">
+          <h2 class="text-lg font-bold">Kochi Metro Rail Limited</h2>
+        </div>
+      </header>
+
+      <div class="px-40 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+          <h2 class="text-[28px] font-bold text-center pb-3 pt-5">Kochi Metro Rail Limited</h2>
+
+          <!-- Tabs -->
+          <div class="pb-3">
+            <div class="flex border-b border-[#cedbe8] px-4 gap-8">
+              <a id="loginTab" onclick="showTab('login')"
+                class="flex flex-col items-center justify-center border-b-[3px] border-b-[#3d99f5] text-[#0d141c] pb-[13px] pt-4 cursor-pointer">
+                <p class="text-sm font-bold">Login</p>
+              </a>
+              <a id="signupTab" onclick="showTab('signup')"
+                class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#49739c] pb-[13px] pt-4 cursor-pointer">
+                <p class="text-sm font-bold">Sign Up</p>
+              </a>
+            </div>
+          </div>
+
+          <!-- Login Form -->
+          <div id="loginForm" class="block">
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="loginUsername" placeholder="Username" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="loginPassword" type="password" placeholder="Password" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <p id="loginError" class="text-red-600 font-bold text-center" style="display:none;"></p>
+            <div class="flex px-4 py-3 justify-center">
+              <button onclick="loginUser()" class="rounded-lg h-10 px-4 bg-[#3d99f5] text-white font-bold">Login</button>
+            </div>
+          </div>
+
+          <!-- Signup Form -->
+          <div id="signupForm" class="hidden">
+            <div class="flex max-w-[480px] gap-4 px-4 py-3">
+              <input id="signupFirstName" placeholder="First Name" class="form-input flex-1 rounded-lg border h-14 p-[15px]" />
+              <input id="signupLastName" placeholder="Last Name" class="form-input flex-1 rounded-lg border h-14 p-[15px]" />
+            </div>
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="signupEmail" type="email" placeholder="Email-id" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="signupUsername" type="text" placeholder="Username" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="signupPassword" type="password" placeholder="Password" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <div class="flex max-w-[480px] px-4 py-3">
+              <input id="signupConfirmPassword" type="password" placeholder="Re-enter Password" class="form-input w-full rounded-lg border h-14 p-[15px]" />
+            </div>
+            <p id="signupError" class="text-red-600 font-bold text-center" style="display:none;"></p>
+            <div class="flex max-w-[480px] justify-between px-4 py-3">
+              <button onclick="signupUser()" class="rounded-lg h-10 px-4 bg-[#3d99f5] text-white font-bold">Confirm</button>
+              <button onclick="showTab('login')" class="rounded-lg h-10 px-4 bg-gray-300 text-black font-bold">Cancel</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
